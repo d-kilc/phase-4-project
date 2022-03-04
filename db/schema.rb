@@ -10,9 +10,33 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_03_03_152506) do
+ActiveRecord::Schema[7.0].define(version: 2022_03_04_181547) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "items", force: :cascade do |t|
+    t.string "name"
+    t.float "original_cost"
+    t.string "brand"
+    t.integer "year_manufactured"
+    t.text "image_url"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "user_items", force: :cascade do |t|
+    t.text "notes"
+    t.string "item_type"
+    t.float "usage_time"
+    t.string "usage_frequency"
+    t.bigint "user_id"
+    t.bigint "item_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["item_id"], name: "index_user_items_on_item_id"
+    t.index ["user_id"], name: "index_user_items_on_user_id"
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "username"
@@ -21,4 +45,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_03_03_152506) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "user_items", "items"
+  add_foreign_key "user_items", "users"
 end
