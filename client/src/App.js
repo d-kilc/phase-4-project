@@ -1,24 +1,32 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router } from 'react-router-dom'
+import { Routes, Route, Link } from 'react-router'
+import { useState, useEffect } from 'react' 
+import Signup from './pages/Signup'
+import Home from './pages/Home'
 
 function App() {
+  const [ user, setUser ] = useState()
+console.log(user)
+
+  useEffect(() => {
+    fetch('http://localhost:3000/me')
+    .then(res => res.json())
+    .then(setUser)
+  }, [])
+
+  function handleLogout() {
+    fetch('http://localhost:3000/logout', { method: 'DELETE'})
+    .then(res => res.json())
+    .then(setUser)
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router >
+      <Routes>
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/" element={<Home user={user} handleSetUser={setUser} handleLogout={handleLogout}/>}/>
+      </Routes>
+    </Router>
   );
 }
 
